@@ -35,6 +35,20 @@ android {
     tasks.withType(JavaCompile).configureEach {
         options.compilerArgs << "-Xlint:deprecation"
     }
+
+    // necessary from AGP8+ to create the `release` component
+    // accessed in `afterEvaluate` for publication via `MavenPublication`
+    publishing {
+        singleVariant("release") {
+            withSourcesJar()
+            withJavadocJar()
+        }
+        multipleVariants {
+            withSourcesJar()
+            withJavadocJar()
+            allVariants()
+        }
+    }
 }
 
 dependencies {

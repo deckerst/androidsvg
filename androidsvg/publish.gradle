@@ -41,6 +41,9 @@ publishing {
     }
 
     publications {
+        release(MavenPublication) {
+            from components.named('release')
+        }
 
         mavenAAR(MavenPublication) {
             artifactId = artifactIdAAR
