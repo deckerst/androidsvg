@@ -2225,7 +2225,11 @@ public class SVGAndroidRenderer
       if (!";base64".equals(url.substring(comma-7, comma)))
          return null;
       try {
-         byte[]  imageData = Base64.decode(url.substring(comma+1), Base64.DEFAULT);  // throws IllegalArgumentException for bad data
+         byte[] imageStringBytes = url.substring(comma + 1).getBytes();
+         if (imageStringBytes.length > imageBase64StringMaxSize) {
+            throw new Exception("Dangerously large Base64 encoded image with size=" + imageStringBytes.length);
+         }
+         byte[]  imageData = Base64.decode(imageStringBytes, Base64.DEFAULT);  // throws IllegalArgumentException for bad data
          return BitmapFactory.decodeByteArray(imageData, 0, imageData.length);
       } catch (Exception e) {
          Log.e(TAG, "Could not decode bad Data URL", e);
@@ -2233,6 +2237,11 @@ public class SVGAndroidRenderer
       }
    }
 
+   private static long imageBase64StringMaxSize = Long.MAX_VALUE;
+
+   public static void setImageBase64StringMaxSize(long sizeBytes) {
+      imageBase64StringMaxSize = sizeBytes;
+   }
 
    private boolean  display()
    {
