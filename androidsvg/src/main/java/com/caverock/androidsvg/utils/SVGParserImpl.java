@@ -2953,7 +2953,8 @@ class SVGParserImpl implements SVGParser
          float  o = parseFloat(val);
          return (o < 0f) ? 0f : Math.min(o, 1f);
       } catch (SVGParseException e) {
-         return null;
+         // returning null would break compositing in `SVGAndroidRenderer`
+         return 1f;
       }
    }
 
